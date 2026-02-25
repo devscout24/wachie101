@@ -15,5 +15,5 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
           server: ftp.thenightowl.team
-          username: wachi101@wachi101.thenightowl.team
+          username: wachi101@thenightowl.team
           password: "v%d}aPk}t;f5arty"

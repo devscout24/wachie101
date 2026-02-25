@@ -61,7 +61,7 @@ class BookingController extends Controller
                 "roomId" => 653037,
                 "status" => "request",  //confirmed
                 "arrival" => $request->start_date,
-                "departure" => $request->start_date,
+                "departure" => $request->end_date,
                 "numAdult" => $request->adults,
                 "numChild" => $request->children,
                 "title" => "Mr",
