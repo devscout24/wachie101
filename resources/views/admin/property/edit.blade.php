@@ -37,6 +37,16 @@
                     <input type="text" name="title" class="form-control" value="{{ $property->title }}" required>
                 </div>
 
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">propertyId</label>
+                    <input type="text" name="property_ref_id" class="form-control" value="{{ $property->property_ref_id }}" required>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">roomId</label>
+                    <input type="text" name="room_ref_id" class="form-control" value="{{ $property->room_ref_id }}" required>
+                </div>
+
                 {{-- Location --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Location</label>

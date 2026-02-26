@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Web\backend\abdullah;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
+use App\Models\Amenity;
 use App\Models\Property;
+use App\Models\PropertyMultipleImage;
 use App\Models\User;
 use App\Traits\apiresponse;
-use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Str;
-use App\Models\Amenity;
-use App\Models\PropertyMultipleImage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class PropertyController extends Controller
 {
@@ -78,11 +78,62 @@ class PropertyController extends Controller
             'multiple_image.*' => 'file|mimes:jpg,jpeg,png,gif,webp,svg,avif|max:5120',
         ]);
 
+        $token = config('services.beds24.token');
+
+        if (!$token) {
+            return response()->json([
+                'error' => 'Beds24 token not found'
+            ]);
+        }
+
         $data = $request->except(['multiple_image', 'amenity_id']);
         $data['user_id'] = Auth::id() ?? 1;
 
         $property = Property::create($data);
 
+        // $response = Http::withHeaders([
+        //     'accept' => 'application/json',
+        //     'token' => $token,
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://beds24.com/api/v2/properties', [
+        //     [
+        //         "name" => $request->title,
+        //         "propertyType" => "apartment",
+        //         "currency" => "AUD",
+        //         "address" => $request->location,
+        //         "city" => $request->city,
+        //         "state" => $request->state,
+        //         "country" => "Australia",
+        //         "postcode" => $request->postcode,
+        //         "mobile" => $request->mobile,
+        //     ]
+        // ]);
+
+        // $dataArray = $response->json()[0];
+        // $property->property_ref_id = $dataArray["new"]["id"];
+        // $property->save();
+
+        // $response = Http::withHeaders([
+        //     'accept' => 'application/json',
+        //     'token' => $token,
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://beds24.com/api/v2/properties', [
+        //     [
+        //         "id" => $property->property_ref_id,
+        //         "roomTypes" => [
+        //             [
+        //                 "name" => "Standard room",
+        //                 "qty" => $request->max_guests,
+        //                 "maxAdult" => $request->max_guests - $request->max_children,
+        //                 "maxChildren" => $request->max_children
+        //             ]
+        //         ]
+        //     ]
+        // ]);
+
+        // $dataArray = $response->json()[0];
+        // $property->room_ref_id = $dataArray["new"]['roomTypes']["id"];
+        // $property->save();
 
         // Save multiple images
         if ($request->hasFile('multiple_image')) {
@@ -151,7 +202,9 @@ class PropertyController extends Controller
 
         // Update normal fields
         $data = $request->except(['multiple_image', 'amenity_id']);
+        
         $property->update($data);
+
 
         // ✅ Upload & Save new images
         if ($request->hasFile('multiple_image')) {

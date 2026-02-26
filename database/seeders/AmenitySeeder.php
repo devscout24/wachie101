@@ -17,6 +17,7 @@ class AmenitySeeder extends Seeder
             ['id' => 1],
             [
                 'name' => 'Free Wi-Fi',
+                'ref_name'=> 'FREE_WIFI',
                 'image' => 'default-image.png',
             ]
         );
@@ -24,6 +25,7 @@ class AmenitySeeder extends Seeder
             ['id' => 2],
             [
                 'name' => 'Swimming Pool',
+                'ref_name'=> 'SWIMMING_POOL',
                 'image' => 'default-image.png',
             ]
         );
@@ -31,6 +33,7 @@ class AmenitySeeder extends Seeder
             ['id' => 3],
             [
                 'name' => 'Fitness Center',
+                'ref_name'=> 'FITNESS_CENTER',
                 'image' => 'default-image.png',
             ]
         );
@@ -38,6 +41,7 @@ class AmenitySeeder extends Seeder
             ['id' => 4],
             [
                 'name' => '24/7 Reception',
+                'ref_name'=> 'RECEPTION',
                 'image' => 'default-image.png',
             ]
         );

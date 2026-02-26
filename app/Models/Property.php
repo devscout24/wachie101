@@ -6,21 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'title',
-        'location',
-        'rating',
-        'total_reviews',
-        'price',
-        'bedrooms',
-        'bathrooms',
-        'max_guests',
-        'amenity_id',
-        'description',
-        'main_image',
-        'multiple_image'
-    ];
+    protected $guarded = ['id'];
 
     protected $casts = [
         'multiple_image' => 'array',

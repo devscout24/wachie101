@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('ref_name');
             $table->string('image')->nullable();
             $table->boolean('status')->default(1)->comment('1=Active,0=Inactive');
             $table->timestamps();
+
+            $table->index('ref_name');
         });
     }
 

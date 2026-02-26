@@ -47,10 +47,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SystemSettingSeeder::class,
             AmenitySeeder::class,
-            PropertySeeder::class,
-            PropertyAmenitySeeder::class,
             TeamSeeder::class,
-            PropertyImageSeeder::class,
+            // PropertySeeder::class,
+            // PropertyAmenitySeeder::class,
+            // PropertyImageSeeder::class,
         ]);
     }
 }
