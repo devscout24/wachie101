@@ -23,7 +23,10 @@ class StripeWebhookController extends Controller
         );
 
         Log::info('stripe event data', [$event]);
-
+        Log::debug('Subscribe type Stripe event type ' . $event->type);
+        Log::info("Dir. => ".__FILE__." ==> handle" );
+        Log::debug("event entered. => {$event}" );
+        
         if ($event->type === 'checkout.session.completed') {
 
             $session = $event->data->object;

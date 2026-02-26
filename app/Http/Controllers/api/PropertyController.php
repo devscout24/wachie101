@@ -19,9 +19,16 @@ class PropertyController extends Controller
 {
     use apiresponse;
 
-    public function index()
+    public function index(Request $request)
     {
-        // $property = Property::with(['amenities:id,name', 'images'])->find($id);
+
+        $token = config('services.beds24.token');
+
+        if (!$token) {
+            return response()->json([
+                'error' => 'Beds24 token not found'
+            ]);
+        }
 
         // if (!$property) {
         //     return response()->json([
@@ -29,7 +36,6 @@ class PropertyController extends Controller
         //         'message' => 'Property not found'
         //     ], 404);
         // }
-
         // // ✅ MULTIPLE IMAGE FROM RELATION
         // $property->multiple_image = $property->images->map(function ($img) {
         //     return url($img->image);
@@ -40,25 +46,20 @@ class PropertyController extends Controller
 
         // // optional: remove images relation from response
         // unset($property->images);
+        $perPage = 10;
+        $currentPage = $request->get('page', 1);
 
-        $token = config('services.beds24.token');
+        // Get ALL property ref IDs (not paginated locally)
+        $allRefIds = Property::pluck('property_ref_id')->toArray();
 
-        if (!$token) {
-            return response()->json([
-                'error' => 'Beds24 token not found'
-            ]);
-        }
+        // Chunk ref IDs for current page (10 per page)
+        $pagedRefIds = array_slice($allRefIds, ($currentPage - 1) * $perPage, $perPage);
 
-        $paginator = Property::latest()->paginate(10);
-
-        $refIds = $paginator->pluck('property_ref_id')->toArray();
-        $ids = $paginator->pluck('id')->toArray();
-        
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'token'  => $token,
         ])->withQueryParameters([
-            'id' => $refIds, 
+            'id'                  => $pagedRefIds,
             'includeLanguages'    => 'all',
             'includeTexts'        => 'all',
             'includePictures'     => true,
@@ -69,28 +70,33 @@ class PropertyController extends Controller
             'includeUnitDetails'  => true,
         ])->get('https://beds24.com/api/v2/properties');
 
-            // Convert response to collection and map it
-        $properties = collect($response->json()['data'])->map(function ($item)  {
-            // Get property level texts (English)
-            
-            // Get the first room type for price
-            $firstRoom = isset($item['roomTypes'][0]) ? $item['roomTypes'][0] : null;
-                        
+        $properties = collect($response->json()['data'] ?? [])->map(function ($item) {
+            $firstRoom = $item['roomTypes'][0] ?? null;
+
             return [
-                'id'          => Property::where('property_ref_id', $item['id'])->value('id'),
-                'property_id'  => $item['id'] ?? null,
-                'name'          => $item['name'] ?? null,
-                'address'       => $item['address'] ?? null,
-                'price'         => $firstRoom['minPrice'] ?? null,
-                'maxPeople'         => $firstRoom['maxPeople'] ?? null,
+                'id'         => Property::where('property_ref_id', $item['id'])->value('id'),
+                'property_id' => $item['id'] ?? null,
+                'name'        => $item['name'] ?? null,
+                'address'     => $item['address'] ?? null,
+                'price'       => $firstRoom['minPrice'] ?? null,
+                'maxPeople'   => $firstRoom['maxPeople'] ?? null,
             ];
         });
 
+        $total = count($allRefIds);
+
         return response()->json([
-            'status' => $response->status(),
+            'status'  => $response->status(),
             'success' => true,
-            'data'   => $properties,
-             'message' => 'Property retrieved successfully'
+            'data'    => $properties,
+            'pagination' => [
+                'current_page' => $currentPage,
+                'per_page'     => $perPage,
+                'total'        => $total,
+                'last_page'    => (int) ceil($total / $perPage),
+                'has_more'     => $response->json()['pages']['nextPageExists'] ?? false,
+            ],
+            'message' => 'Property retrieved successfully'
         ]);
     }
 

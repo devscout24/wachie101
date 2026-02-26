@@ -20,16 +20,11 @@ Route::middleware(['web'])->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
+    // standard POST login route matching template
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
+    // kept original admin-specific route in case some code uses it
     Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
-
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');

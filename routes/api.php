@@ -103,4 +103,4 @@ Route::post('/openai-chat/send', [AiChatController::class, 'send'])->name('opena
 
 
 
-Route::post('/stripe/webhook', [StripePaymentController::class, 'handle']);
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

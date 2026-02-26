@@ -4,13 +4,14 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Order;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Psy\Util\Str;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
 use log;
+use Illuminate\Support\Str;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class StripeController extends Controller
 {
@@ -21,6 +22,14 @@ class StripeController extends Controller
     {
         $booking = Booking::findOrFail($bookingId);
 
+         $order = Order::create([
+            'booking_id' => $booking->id,
+            'order_number' => Str::uuid(),
+            'amount' => $booking->total_price,
+            'currency' => 'aud',
+            'status' => 'pending',
+        ]);
+
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $session = \Stripe\Checkout\Session::create([
@@ -28,7 +37,7 @@ class StripeController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'usd',
+                    'currency' => 'aud',
                     'unit_amount' => (int) round($booking->total_price * 100),
                     'product_data' => [
                         'name' => 'Booking #' . $booking->id,
@@ -37,6 +46,7 @@ class StripeController extends Controller
                 'quantity' => 1,
             ]],
             'metadata' => [
+                'order_id' => $order->id,
                 'property_id' => $booking->property_id,
                 'booking_id' => $booking->id,
                 'user_id'    => $booking->user_id,

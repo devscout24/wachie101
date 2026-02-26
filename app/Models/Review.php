@@ -18,6 +18,11 @@ class Review extends Model
         'is_approved',
     ];
 
+    protected $casts = [
+        'is_approved' => 'boolean',
+        'rating' => 'float',
+    ];
+
     public function property()
     {
         return $this->belongsTo(Property::class);

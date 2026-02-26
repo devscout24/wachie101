@@ -69,9 +69,26 @@
             <div class="container-login100">
                 <div class="wrap-login100 p-0">
                     <div class="card-body">
-
+                        {{-- <form class="login100-form validate-form" method="POST" action="{{ route('login') }}"> --}}
                         <form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
                             @csrf
+
+                            {{-- display validation errors or status messages --}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('status'))
+                                <div class="alert alert-success">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
 
                             <span class="login100-form-title">
                                 Login
