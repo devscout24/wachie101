@@ -183,7 +183,16 @@ class PropertyController extends Controller
 
     public function availableDates(Request $request, $id){
 
-        $propertyId = 313566;
+        $property = Property::find($id);
+        
+        if(!$property){
+            return response()->json([
+                'success'=> false,
+                'message' => 'property not found',
+            ]);
+        }
+
+        $propertyId = $property->property_ref_id;
 
         $start_date = $request->query('start_date');
         $end_date = $request->query('end_date');
