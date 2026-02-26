@@ -26,7 +26,7 @@ class StripePaymentController extends Controller
             'booking_id' => $booking->id,
             'order_number' => Str::uuid(),
             'amount' => $booking->total_price,
-            'currency' => 'usd',
+            'currency' => 'aud',
             'status' => 'pending',
         ]);
 
@@ -62,6 +62,8 @@ class StripePaymentController extends Controller
 
     public function handle(Request $request)
     {
+
+
         $payload = $request->getContent();
         $sig = $request->header('Stripe-Signature');
         $event = \Stripe\Webhook::constructEvent(

@@ -48,11 +48,17 @@ class PropertyController extends Controller
                 'error' => 'Beds24 token not found'
             ]);
         }
+
+        $paginator = Property::latest()->paginate(10);
+
+        $refIds = $paginator->pluck('property_ref_id')->toArray();
+
         
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'token'  => $token,
         ])->withQueryParameters([
+            'id' => $refIds, 
             'includeLanguages'    => 'all',
             'includeTexts'        => 'all',
             'includePictures'     => true,
@@ -66,7 +72,6 @@ class PropertyController extends Controller
             // Convert response to collection and map it
         $properties = collect($response->json()['data'])->map(function ($item) {
             // Get property level texts (English)
-            $propertyTexts = isset($item['texts'][0]) ? $item['texts'][0] : null;
             
             // Get the first room type for price
             $firstRoom = isset($item['roomTypes'][0]) ? $item['roomTypes'][0] : null;
@@ -97,12 +102,21 @@ class PropertyController extends Controller
                 'error' => 'Beds24 token not found'
             ]);
         }
+        
+        $property = Property::find($id);
+
+        if(!$property) {
+            return response()->json([
+                'success' => false,
+                'message' => 'property not found'
+            ]);
+        }
 
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'token'  => $token,
         ])->withQueryParameters([
-            'id'                  => 313566,
+            'id'                  => $property->property_ref_id,
             'includeLanguages'    => 'all',
             'includeTexts'        => 'all',
             'includePictures'     => true,
@@ -111,7 +125,8 @@ class PropertyController extends Controller
             'includeUpsellItems'  => true,
             'includeAllRooms'     => true,
             'includeUnitDetails'  => true,
-            'roomId'              => 653037,
+            'roomId'              => $property->room_ref_id,
+
         ])->get('https://beds24.com/api/v2/properties');
 
             // Convert response to collection and map it
@@ -141,8 +156,6 @@ class PropertyController extends Controller
                 ->values()
                 ->toArray();
                 
-            $firstObligatoryUpsell = collect($propertyUpsells)->firstWhere('type', 'obligatory');
-            
             return [
                 'id'            => $item['id'] ?? null,
                 'name'          => $item['name'] ?? null,

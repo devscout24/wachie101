@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedBigInteger('booking_ref_id')->nullable();
+
             // Relations
             $table->foreignId('property_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
@@ -36,6 +38,8 @@ return new class extends Migration
             $table->string('stripe_session_id')->nullable();
 
             $table->timestamps();
+
+            $table->index('booking_ref_id');
         });
     }
 

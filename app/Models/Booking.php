@@ -6,40 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    protected $fillable = [
-        'property_id',
-        'user_id',
-        'start_date',
-        'end_date',
-
-        // Guests
-        'adults',
-        'children',
-
-        // Customer Info
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-
-        // Address
-        'address',
-        'city',
-        'country',
-        'postal_code',
-
-        'comments',
-
-        // Price
-        'nights',
-        'price_per_night',
-        'price_total',
-        'cleaning_fee',
-        'booking_fee',
-        'total_price',
-        'payment_status',
-        'stripe_session_id',
-    ];
+    protected $guarded = ['id'];
 
     public function property()
     {

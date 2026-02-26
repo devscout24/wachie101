@@ -22,6 +22,7 @@ class AmenityController extends Controller
                 ->addIndexColumn()
 
                 ->addColumn('name', fn($row) => e($row->name))
+                ->addColumn('ref_name', fn($row) => e($row->ref_name))
 
                 ->addColumn('image', function ($row) {
                     if ($row->image) {

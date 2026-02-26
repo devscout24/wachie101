@@ -21,6 +21,13 @@
 
                 <div class="col-md-6">
                     <div class="mb-3">
+                        <label for="name" class="form-label">Ref Name</label>
+                        <input type="text" name="ref_name" id="ref_name" class="form-control" value="{{ $amenity->ref_name }}" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
                         <input type="file" name="image" id="image" class="form-control">
                     </div>

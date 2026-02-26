@@ -23,7 +23,7 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'property_id' => 'required|exists:properties,id',
+            'property_id' => 'required|exists:properties,id',
             'start_date'  => 'required|date',
             'end_date'    => 'required|date|after:start_date',
             'adults'      => 'required|integer|min:1',
@@ -34,9 +34,17 @@ class BookingController extends Controller
             return $this->error($validator->errors(), 'Validation failed', 422);
         }
 
-        // $property = Property::findOrFail($request->property_id);
+        $property = Property::find($request->property_id);
+
+        if (!$property) {
+            return response()->json([
+                'success' => false,
+                'message'=> 'property not found'
+            ]);
+        }
 
         // 🗓 Calculate nights
+        
         $startDate = Carbon::parse($request->start_date);
         $endDate   = Carbon::parse($request->end_date);
         $nights    = $startDate->diffInDays($endDate);
@@ -58,7 +66,7 @@ class BookingController extends Controller
         
         $bookingData = [
             [
-                "roomId" => 653037,
+                "roomId" => $property->room_ref_id,
                 "status" => "request",  //confirmed
                 "arrival" => $request->start_date,
                 "departure" => $request->end_date,
@@ -83,36 +91,38 @@ class BookingController extends Controller
             'Content-Type' => 'application/json',
         ])->post('https://beds24.com/api/v2/bookings', $bookingData);
 
-       $data = $response->json();
+        $data = $response->json();
         $firstItem = $data[0];
 
         // 💰 Price calculations
-        // $pricePerNight = $property->price;
-        // $priceTotal    = $pricePerNight * $nights;
-        // $cleaningFee   = $property->cleaning_fee;
-        // $bookingFee    = round($priceTotal * 0.045, 2);
-        // $total         = $priceTotal + $cleaningFee + $bookingFee;
+        $pricePerNight = $property->price;
+        $priceTotal    = $pricePerNight * $nights;
+        $cleaningFee   = $property->cleaning_fee;
+        $bookingFee    = round($priceTotal * ($property->booking_fee ?? 0.045), 2);
+        $total         = $priceTotal + $cleaningFee + $bookingFee;
 
-        // // ✅ STORE FULL BOOKING + PRICES
-        // $booking = Booking::create([
-        //     'property_id'      => $property->id,
-            // 'booking_ref_id' => $firstItem['new']['id'],
-        //     'user_id'          => auth()->id(),
-        //     'start_date'       => $request->start_date,
-        //     'end_date'         => $request->end_date,
-        //     'adults'           => $request->adults,
-        //     'children'         => $request->children ?? 0,
+        
 
-        //     // 🔑 PRICE DATA (VERY IMPORTANT)
-        //     'nights'           => $nights,
-        //     'price_per_night'  => $pricePerNight,
-        //     'price_total'      => $priceTotal,
-        //     'cleaning_fee'     => $cleaningFee,
-        //     'booking_fee'      => $bookingFee,
-        //     'total_price'      => $total,
+        // ✅ STORE FULL BOOKING + PRICES
+        $booking = Booking::create([
+            'property_id'      => $property->id,
+            'booking_ref_id' => $firstItem['new']['id'],
+            'user_id'          => auth()->id(),
+            'start_date'       => $request->start_date,
+            'end_date'         => $request->end_date,
+            'adults'           => $request->adults,
+            'children'         => $request->children ?? 0,
 
-        //     'payment_status'   => 'pending',
-        // ]);
+            // 🔑 PRICE DATA (VERY IMPORTANT)
+            'nights'           => $nights,
+            'price_per_night'  => $pricePerNight,
+            'price_total'      => $priceTotal,
+            'cleaning_fee'     => $cleaningFee,
+            'booking_fee'      => $bookingFee,
+            'total_price'      => $total,
+
+            'payment_status'   => 'pending',
+        ]);
 
         // ✅ API RESPONSE (frontend friendly)
         return response()->json([

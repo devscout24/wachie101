@@ -15,6 +15,7 @@
                 <th>#</th>
                 {{-- <th>Property ID</th> --}}
                 <th>Name</th>
+                <th>REF</th>
                 <th>Image</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -39,6 +40,7 @@ $(function() {
             { data: 'DT_RowIndex', searchable: false, orderable: false },
             // { data: 'property_id' },
             { data: 'name' },
+            { data: 'ref_name' },
             { data: 'image', searchable: false, orderable: false },
             { data: 'status' },
             { data: 'action', searchable: false, orderable: false }

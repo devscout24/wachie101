@@ -23,12 +23,19 @@
 
                 <div class="col-md-6">
                     <div class="mb-3">
+                        <label for="name" class="form-label">Ref Name</label>
+                        <input type="text" name="ref_name" id="ref_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
                         <label for="image" class="form-label">Image</label>
                         <input type="file" name="image" id="image" class="form-control" required>
                     </div>
                 </div>
 
-                <div>
+                <div class="col-md-6">
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
                         <select name="status" id="status" class="form-select" required>
