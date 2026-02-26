@@ -22,7 +22,7 @@ class StripeController extends Controller
     {
         $booking = Booking::findOrFail($bookingId);
 
-         $order = Order::create([
+        $order = Order::create([
             'booking_id' => $booking->id,
             'order_number' => Str::uuid(),
             'amount' => $booking->total_price,

@@ -173,6 +173,7 @@ class PropertyController extends Controller
                 'price'         => $firstRoom['minPrice'] ?? null,
                 'maxPeople'         => $firstRoom['maxPeople'] ?? null,
                 'obligatory_upsells' => $obligatoryUpsells,
+                'cleaning_fee'    => $firstRoom['cleaningFee'] ?? 0,
                 'amenities'     => $item['featureCodes'] ?? null,
                 'property_info'         => $propertyTexts['propertyDescription1'] ?? null,  // Property description 1
                 'local_area'         => $propertyTexts['propertyDescription2'] ?? null,  // Property description 2

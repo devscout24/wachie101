@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Order;
 use App\Models\Property;
 use App\Traits\apiresponse;
 use Carbon\Carbon;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -23,7 +25,7 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'property_id' => 'required|exists:properties,id',
+            'id' => 'required|exists:properties,id',
             'start_date'  => 'required|date',
             'end_date'    => 'required|date|after:start_date',
             'adults'      => 'required|integer|min:1',
@@ -34,7 +36,7 @@ class BookingController extends Controller
             return $this->error($validator->errors(), 'Validation failed', 422);
         }
 
-        $property = Property::find($request->property_id);
+        $property = Property::find($request->id);
 
         if (!$property) {
             return response()->json([
@@ -124,12 +126,49 @@ class BookingController extends Controller
             'payment_status'   => 'pending',
         ]);
 
-        // ✅ API RESPONSE (frontend friendly)
+        $order = Order::create([
+            'booking_id' => $booking->id,
+            'order_number' => Str::uuid(),
+            'amount' => $booking->total_price,
+            'currency' => 'aud',
+            'status' => 'pending',
+        ]);
+
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = \Stripe\Checkout\Session::create([
+            'mode' => 'payment',
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'aud',
+                    'unit_amount' => (int) round($booking->total_price * 100),
+                    'product_data' => [
+                        'name' => 'Booking #' . $booking->id,
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'metadata' => [
+                'order_id' => $order->id,
+                'property_id' => $booking->property_id,
+                'booking_id' => $booking->id,
+                'user_id'    => $booking->user_id,
+            ],
+            'success_url' => url('/stripe-success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url'  => url('/stripe-cancel'),
+        ]);
+
         return response()->json([
-            'success' => $firstItem['success'],
-            'data' => $firstItem,
-            'messsage' => 'booking created successfully'
-        ], 201);
+            'success' => true,
+            'checkout_url' => $session->url,
+            'session_id' => $session->id,
+            'booking_id' => $booking->id,
+            'property_id' => $booking->property_id,
+            'message' => 'Stripe checkout session created successfully',
+        ]);
+
+        
     }
 
 
@@ -181,5 +220,43 @@ class BookingController extends Controller
         ]);
     }
 
+    public function totalAmount(Request $request){
+        $property = Property::find($request->id);    
+        if (!$property) {
+            return response()->json([
+                'success' => false,
+                'message'=> 'property not found'
+            ]);
+        }
+
+        $startDate = Carbon::parse($request->start_date);
+        $endDate   = Carbon::parse($request->end_date);
+        $nights    = $startDate->diffInDays($endDate);
+
+        if ($nights < 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Minimum 1 night required.'
+            ], 422);
+        }
+
+         // 💰 Price calculations
+        $pricePerNight = $property->price;
+        $priceTotal    = $pricePerNight * $nights;
+        $cleaningFee   = $property->cleaning_fee;
+        $bookingFee    = round($priceTotal * ($property->booking_fee ?? 0.045), 2);
+        $total         = $priceTotal + $cleaningFee + $bookingFee;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'price_per_night' => $pricePerNight,
+                'price_total'     => $priceTotal,
+                'cleaning_fee'    => $cleaningFee,
+                'booking_fee'     => $bookingFee,
+                'total_price'     => $total
+            ]
+        ]);
+    }
     
 }

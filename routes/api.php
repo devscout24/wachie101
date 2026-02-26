@@ -71,6 +71,8 @@ Route::get('review/index', [ReviewsController::class, 'index']);
 Route::post('booking/store', [BookingController::class, 'store']);
 Route::get('booking/all', [BookingController::class, 'getAll']);
 Route::post('booking/only', [BookingController::class, 'onlybooking']);
+Route::post('booking/total-expense', [BookingController::class, 'totalAmount']);
+
 
 
 
