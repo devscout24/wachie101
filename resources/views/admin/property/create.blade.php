@@ -42,11 +42,11 @@
 
                 <div class="col-md-3 mb-3">
                     <label class="form-label">latitude</label>
-                    <input type="number" name="latitude" class="form-control" value="{{ old('latitude') }}" required>
+                    <input type="text" name="latitude" class="form-control" value="{{ old('latitude') }}" required>
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">longitude</label>
-                    <input type="number" name="longitude" class="form-control" value="{{ old('longitude') }}" required>
+                    <input type="text" name="longitude" class="form-control" value="{{ old('longitude') }}" required>
                 </div>
 
                 <div class="col-md-3 mb-3">

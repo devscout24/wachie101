@@ -52,7 +52,7 @@ class PropertyController extends Controller
         $paginator = Property::latest()->paginate(10);
 
         $refIds = $paginator->pluck('property_ref_id')->toArray();
-
+        $ids = $paginator->pluck('id')->toArray();
         
         $response = Http::withHeaders([
             'accept' => 'application/json',
@@ -70,14 +70,15 @@ class PropertyController extends Controller
         ])->get('https://beds24.com/api/v2/properties');
 
             // Convert response to collection and map it
-        $properties = collect($response->json()['data'])->map(function ($item) {
+        $properties = collect($response->json()['data'])->map(function ($item)  {
             // Get property level texts (English)
             
             // Get the first room type for price
             $firstRoom = isset($item['roomTypes'][0]) ? $item['roomTypes'][0] : null;
                         
             return [
-                'id'            => $item['id'] ?? null,
+                'id'          => Property::where('property_ref_id', $item['id'])->value('id'),
+                'property_id'  => $item['id'] ?? null,
                 'name'          => $item['name'] ?? null,
                 'address'       => $item['address'] ?? null,
                 'price'         => $firstRoom['minPrice'] ?? null,
