@@ -1,19 +1,14 @@
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
 
-# Redirect Trailing Slashes If Not A Folder...
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} (.+)/$
-RewriteRule ^ %1 [L,R=301]
-
-# Only rewrite if the request is NOT already inside the 'public' folder
-# AND if the 'public' folder actually exists
-RewriteCond %{REQUEST_URI} !^public [NC]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{DOCUMENT_ROOT}/public -d
-RewriteRule ^(.*)$ public/$1 [L]
+    # Redirect requests that are not already in /public
+    RewriteCond %{REQUEST_URI} !^/public/ [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /public/$1 [L]
+</IfModule>
 
 # php -- BEGIN cPanel-generated handler, do not edit
-# Set the "ea-php84" package as the default "PHP" programming language.
 <IfModule mime_module>
   AddHandler application/x-httpd-ea-php84 .php .php8 .phtml
 </IfModule>
