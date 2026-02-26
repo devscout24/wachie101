@@ -18,7 +18,7 @@ class StripePaymentController extends Controller
     public function checkoutBooking(Request $request)
     {
         $booking = Booking::where('id', $request->booking_id)
-            ->where('status', 'pending')
+            ->where('status', 'request')
             ->firstOrFail();
 
         // Create Order
@@ -60,41 +60,7 @@ class StripePaymentController extends Controller
         ]);
     }
 
-    public function handle(Request $request)
-    {
-
-
-        $payload = $request->getContent();
-        $sig = $request->header('Stripe-Signature');
-        $event = \Stripe\Webhook::constructEvent(
-            $payload,
-            $sig,
-            config('services.stripe.webhook_secret')
-        );
-
-        if ($event->type === 'checkout.session.completed') {
-
-            $session = $event->data->object;
-
-            $order = Order::find($session->metadata->order_id);
-
-            if ($order && $order->status !== 'paid') {
-
-                Payment::create([
-                    'order_id' => $order->id,
-                    'stripe_payment_intent' => $session->payment_intent,
-                    'amount' => $session->amount_total / 100,
-                    'currency' => $session->currency,
-                    'status' => 'paid',
-                ]);
-
-                $order->update(['status' => 'paid']);
-                $order->booking->update(['status' => 'paid']);
-            }
-        }
-
-        return response()->json(['success' => true]);
-    }
+    
 
     
 }

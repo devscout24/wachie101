@@ -34,7 +34,7 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2)->nullable();
 
             //  PAYMENT
-            $table->string('payment_status')->default('pending')->nullable(); // pending, paid, cancelled
+            $table->enum('payment_status', ['request', 'confirmed', 'paid', 'completed', 'cancelled'])->default('request'); // request, paid, cancelled
             $table->string('stripe_session_id')->nullable();
 
             $table->timestamps();
