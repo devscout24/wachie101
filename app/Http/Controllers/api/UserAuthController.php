@@ -49,7 +49,7 @@ class UserAuthController extends Controller
             return Helper::jsonErrorResponse('Unauthorized. Please check your credentials.', 401);
         }
 
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         return $this->respondUserWithToken($user, $token, 'Login successful.');
     }

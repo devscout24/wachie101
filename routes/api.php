@@ -95,7 +95,10 @@ Route::post('booking/address/', [BookingAddressController::class, 'BookingAddres
 // OpenAI Chat Routes
 Route::post('/openai-chat/send', [AiChatController::class, 'send'])->name('openai.send');
 
-
+Route::get('test', function () {
+    
+return response()->json(['message' => 'API is working']);
+})->middleware('auth:api');
 
 // stripe payment routes can be added here
 // Route::middleware('auth:sanctum')->group(function () {
