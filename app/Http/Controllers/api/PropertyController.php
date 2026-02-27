@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Property;
+use App\Models\Review;
 use App\Traits\apiresponse;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,14 +73,18 @@ class PropertyController extends Controller
 
         $properties = collect($response->json()['data'] ?? [])->map(function ($item) {
             $firstRoom = $item['roomTypes'][0] ?? null;
+            $id = Property::where('property_ref_id', $item['id'])->value('id');
 
+            $rating = Review::where('property_id', $id)->avg('rating');
+            
             return [
-                'id'         => Property::where('property_ref_id', $item['id'])->value('id'),
+                'id'         => $id,
                 'property_id' => $item['id'] ?? null,
                 'name'        => $item['name'] ?? null,
                 'address'     => $item['address'] ?? null,
                 'price'       => $firstRoom['minPrice'] ?? null,
                 'maxPeople'   => $firstRoom['maxPeople'] ?? null,
+                'rating'     => $rating,
             ];
         });
 
