@@ -19,7 +19,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
+Route::group(['middleware'=> 'auth:api'], function () {
+    Route::get('profile', [UserAuthController::class, 'getProfile'])->name('profile');
+});
 // Login & Register
 
 Route::controller(UserAuthBDController::class)->group(function () {
@@ -68,7 +70,10 @@ Route::get('review/index', [ReviewsController::class, 'index']);
 
 
 // Booking Routes
-Route::post('booking/store', [BookingController::class, 'store']);
+Route::group(['middleware'=> 'auth:api'], function () {
+    Route::post('booking/store', [BookingController::class, 'store']);
+});
+
 Route::get('booking/all', [BookingController::class, 'getAll']);
 Route::post('booking/only', [BookingController::class, 'onlybooking']);
 Route::post('booking/total-expense', [BookingController::class, 'totalAmount']);

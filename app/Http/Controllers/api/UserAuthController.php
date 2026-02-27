@@ -303,6 +303,26 @@ class UserAuthController extends Controller
     // -------------------------
     // UPDATE PROFILE
     // -------------------------
+    public function getProfile()
+    {
+        try {
+            $user = auth()->user() ?? JWTAuth::parseToken()->authenticate();
+
+            if (!$user) {
+                return response()->json(['success'=>false,'error' => 'User not found'], 404);
+            }
+
+            return response()->json(['success'=>true,'user' => $this->formatUser($user)], 200); 
+
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return $this->error([], 'Token expired.', 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return $this->error([], 'Token invalid.', 401);
+        } catch (\Exception $e) {
+            return $this->error([], $e->getMessage(), 500);
+        }
+    }
+
     public function updateProfile(Request $request)
     {
         try {
