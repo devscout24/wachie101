@@ -11,7 +11,7 @@ use App\Http\Controllers\api\StripePaymentController;
 use App\Http\Controllers\api\StripeWebhookController;
 use App\Http\Controllers\api\TeamController;
 use App\Http\Controllers\api\UserAuthBDController;
-use App\Http\Controllers\API\UserAuthController;
+use App\Http\Controllers\api\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
