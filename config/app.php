@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'frontend_url' => env('FRONTEND_URL', 'https://property-hub-rho.vercel.app/allproperties'),
 
     /*
     |--------------------------------------------------------------------------

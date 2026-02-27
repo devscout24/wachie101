@@ -81,13 +81,16 @@ class StripeController extends Controller
             $bookingId  = $session->metadata->booking_id ?? null;
             $propertyId = $session->metadata->property_id ?? null;
 
-            return response()->json([
-                'success' => true,
-                'booking_id' => $bookingId,
-                'property_id' => $propertyId,
-                'session_id' => $sessionId,
-                'message' => 'Payment successful'
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'booking_id' => $bookingId,
+            //     'property_id' => $propertyId,
+            //     'session_id' => $sessionId,
+            //     'message' => 'Payment successful'
+            // ]);
+
+            // return redirect()->away(config('app.frontend_url') . "/payment-success?booking_id={$bookingId}&property_id={$propertyId}");
+            return redirect()->away(config('app.frontend_url'));
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
