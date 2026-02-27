@@ -17,7 +17,7 @@ class ReviewsController extends Controller
     public function addReview(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'property_id' => 'required|exists:properties,id',
+            'id' => 'required|exists:properties,id',
             'user_id'     => 'required|exists:users,id',
             'rating'      => 'required|integer|min:1|max:5',
             'comment'     => 'nullable|string',
@@ -31,7 +31,7 @@ class ReviewsController extends Controller
         }
 
         // Fetch the property first
-        $property = Property::find($request->property_id);
+        $property = Property::find($request->id);
 
         if (!$property) {
             return response()->json([
