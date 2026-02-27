@@ -164,7 +164,8 @@ class PropertyController extends Controller
                 ->toArray();
                 
             return [
-                'id'            => $item['id'] ?? null,
+                'id'            => Property::where('property_ref_id', $item['id'])->value('id'),
+                'property_id'            => $item['id'] ?? null,
                 'name'          => $item['name'] ?? null,
                 'address'       => $item['address'] ?? null,
                 'latitude'      => isset($item['latitude']) ? number_format((float)$item['latitude'], 8, '.', '') : null,
