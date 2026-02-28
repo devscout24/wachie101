@@ -15,7 +15,8 @@
     <meta name="description" content="Noa - Laravel Bootstrap 5 Admin & Dashboard Template">
     <meta name="author" content="Spruko Technologies Private Limited">
     <meta name="keywords"
-        content="laravel admin template, bootstrap admin template, admin dashboard template, admin dashboard, admin template, admin, bootstrap 5, laravel admin, laravel admin dashboard template, laravel ui template, laravel admin panel, admin panel, laravel admin dashboard, laravel template, admin ui dashboard">
+        content="laravel admin template, bootstrap admin template, admin dashboard template, 
+        admin dashboard, admin template, admin, bootstrap 5, laravel admin, laravel admin dashboard template, laravel ui template, laravel admin panel, admin panel, laravel admin dashboard, laravel template, admin ui dashboard">
 
     <!-- TITLE -->
     <title>Noa - Laravel Bootstrap 5 Admin & Dashboard Template</title>
@@ -70,7 +71,7 @@
                 <div class="wrap-login100 p-0">
                     <div class="card-body">
                         {{-- <form class="login100-form validate-form" method="POST" action="{{ route('login') }}"> --}}
-                        <form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
+                        <form class="login100-form validate-form" method="POST" action="{{ route('admin.login') }}">
                             @csrf
 
                             {{-- display validation errors or status messages --}}

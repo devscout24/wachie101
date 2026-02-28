@@ -11,7 +11,6 @@ use App\Http\Controllers\api\StripePaymentController;
 use App\Http\Controllers\api\StripeWebhookController;
 use App\Http\Controllers\api\TeamController;
 use App\Http\Controllers\api\UserAuthBDController;
-use App\Http\Controllers\api\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +18,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::group(['middleware'=> 'auth:api'], function () {
-    Route::get('profile', [UserAuthController::class, 'getProfile'])->name('profile');
-});
 // Login & Register
 
 Route::controller(UserAuthBDController::class)->group(function () {
@@ -39,8 +35,10 @@ Route::controller(UserAuthBDController::class)->group(function () {
     Route::post('forget-password', 'forgetPassword');
     Route::post('reset-password', 'resetPassword');
 
+    Route::get('profile',  'getProfile');
+
     // User Info
-    Route::get('/login/user',  'showUser');
+    Route::get('/login/user',  'showUser')->middleware('auth:api');
 
     // Social login
     Route::post('social-login/google', 'googleLogin');
