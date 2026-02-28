@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -23,7 +24,8 @@ Route::middleware(['web'])->group(function () {
     // Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
 
     // kept original admin-specific route in case some code uses it
-    Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
+    // Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
+    Route::post('admin/login', [AuthController::class, 'login'])->name('admin.login');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
@@ -49,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('admin.logout');
+    Route::post('admin/logout', [AuthController::class,'logout'])->name('');
+        
 });
 
