@@ -186,15 +186,15 @@ class PropertyController extends Controller
             ];
         });
 
-        $property->update([
-            'name' => $properties[0]['name'] ?? $property->name,
-            'address' => $properties[0]['address'] ?? $property->address,
-            'latitude' => $properties[0]['latitude'] ?? $property->latitude,
-            'longitude' => $properties[0]['longitude'] ?? $property->longitude,
-            'price' => $properties[0]['price'] ?? $property->price,
-            'cleaning_fee' => $properties[0]['cleaning_fee'] ?? $property->cleaning_fee,
-            'booking_fee' => $properties[0]['booking_fee_percentage'] ?? $property->booking_fee,
-        ]);
+        // $property->update([
+        //     'name' => $properties[0]['name'] ?? $property->name,
+        //     'address' => $properties[0]['address'] ?? $property->address,
+        //     'latitude' => $properties[0]['latitude'] ?? $property->latitude,
+        //     'longitude' => $properties[0]['longitude'] ?? $property->longitude,
+        //     'price' => $properties[0]['price'] ?? $property->price,
+        //     'cleaning_fee' => $properties[0]['cleaning_fee'] ?? $property->cleaning_fee,
+        //     'booking_fee' => $properties[0]['booking_fee_percentage'] ?? $property->booking_fee,
+        // ]);
         
         return response()->json([
             'success' => true,

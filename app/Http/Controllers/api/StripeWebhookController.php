@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -30,10 +31,10 @@ class StripeWebhookController extends Controller
 
             $session = $event->data->object;
 
-            $payment = Payment::where('stripe_session_id', $session->id)->first();
+            $payment = Payment::where('booking_id', $session->metadata->booking_id)->first();
             
             if(!$payment) {
-                Payment::create([
+                $payment = Payment::create([
                     'booking_id' => $session->metadata->booking_id,
                     'amount' => $session->amount_total / 100,
                     'stripe_session_id' => $session->id,
@@ -44,11 +45,11 @@ class StripeWebhookController extends Controller
 
             $payment->update([
                 'stripe_payment_intent' => $session->payment_intent,
-                'amount_cents'=> $session->amount_paid,
+                'amount_cents'=> $session->amount_total,
                 'status' => 'succeeded',
             ]);
 
-            $booking = $payment->booking;
+            $booking = Booking::find($session->metadata->booking_id);
             $booking->update([
                 'payment_status' => 'paid',
             ]);

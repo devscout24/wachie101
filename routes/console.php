@@ -9,6 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('app:check-for-new-property-command')
-->everySixHours()
-// ->everyFifteenSeconds()
+// ->everySixHours()
+->everyFifteenSeconds()
 ->appendOutputTo(storage_path('logs/scheduled-tasks.log'));

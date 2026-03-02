@@ -4,66 +4,13 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Order;
-use App\Models\Property;
-use App\Models\User;
 use Illuminate\Http\Request;
-use log;
-use Illuminate\Support\Str;
-use Stripe\Checkout\Session;
+
 use Stripe\Stripe;
 
 class StripeController extends Controller
 {
 
-
-
-    public function checkout($bookingId)
-    {
-        $booking = Booking::findOrFail($bookingId);
-
-        $order = Order::create([
-            'booking_id' => $booking->id,
-            'order_number' => Str::uuid(),
-            'amount' => $booking->total_price,
-            'currency' => 'aud',
-            'status' => 'pending',
-        ]);
-
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-
-        $session = \Stripe\Checkout\Session::create([
-            'mode' => 'payment',
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'aud',
-                    'unit_amount' => (int) round($booking->total_price * 100),
-                    'product_data' => [
-                        'name' => 'Booking #' . $booking->id,
-                    ],
-                ],
-                'quantity' => 1,
-            ]],
-            'metadata' => [
-                'order_id' => $order->id,
-                'property_id' => $booking->property_id,
-                'booking_id' => $booking->id,
-                'user_id'    => $booking->user_id,
-            ],
-            'success_url' => url('/stripe-success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url'  => url('/stripe-cancel'),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'checkout_url' => $session->url,
-            'session_id' => $session->id,
-            'booking_id' => $booking->id,
-            'property_id' => $booking->property_id,
-            'message' => 'Stripe checkout session created successfully',
-        ]);
-    }
 
 
 

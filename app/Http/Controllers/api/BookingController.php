@@ -71,6 +71,7 @@ class BookingController extends Controller
             [
                 "roomId" => $property->room_ref_id,
                 "status" => "request",  //confirmed
+                // "status" => "confirmed", 
                 "arrival" => $request->start_date,
                 "departure" => $request->end_date,
                 "numAdult" => $request->adults,
@@ -125,7 +126,7 @@ class BookingController extends Controller
             'booking_fee'      => $bookingFee,
             'total_price'      => $total,
 
-            'payment_status'   => 'pending',
+            'payment_status'   => 'request',
         ]);
 
         
@@ -160,6 +161,8 @@ class BookingController extends Controller
             'currency' => 'aud',
             'status' => 'pending',
         ]);
+
+        $booking->update(['stripe_session_id' => $session->id]);
 
         return response()->json([
             'success' => true,

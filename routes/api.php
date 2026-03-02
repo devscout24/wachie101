@@ -7,7 +7,6 @@ use App\Http\Controllers\api\BookingController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReviewsController;
 use App\Http\Controllers\api\StripeController;
-use App\Http\Controllers\api\StripePaymentController;
 use App\Http\Controllers\api\StripeWebhookController;
 use App\Http\Controllers\api\TeamController;
 use App\Http\Controllers\api\UserAuthBDController;
@@ -85,10 +84,10 @@ Route::get('team/{id}', [TeamController::class, 'getOne']);
 
 
 // Stripe Payment Routes
-Route::get('stripe/checkout/{bookingId}', [StripeController::class, 'checkout']);
 Route::get('/stripe-success', [StripeController::class, 'success']);
 Route::get('/stripe-cancel', [StripeController::class, 'cancel']);
-Route::post('stripe/verify-payment', [StripeController::class, 'verifyPayment']);
+
+// Route::post('stripe/verify-payment', [StripeController::class, 'verifyPayment']);
 
 
 // booking address routes can be added here
@@ -103,11 +102,6 @@ Route::get('test', function () {
 return response()->json(['message' => 'API is working']);
 })->middleware('auth:api');
 
-// stripe payment routes can be added here
-// Route::middleware('auth:sanctum')->group(function () {
-//     // Route::post('/booking', [BookingController::class, 'createBooking']);
-//     Route::post('/booking/checkout', [StripePaymentController::class, 'checkoutBooking']);
-// });
 
 
 

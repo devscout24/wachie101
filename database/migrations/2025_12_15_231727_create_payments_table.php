@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained('bookings')->nullOnDelete();
+            $table->foreignId('booking_id')->nullable()->constrained('bookings')->nullOnDelete();
             $table->string('stripe_session_id')->nullable();
             $table->string('stripe_payment_intent')->nullable();
             $table->string('currency')->default('aud');
