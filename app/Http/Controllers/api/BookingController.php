@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Property;
 use App\Traits\apiresponse;
 use Carbon\Carbon;
@@ -87,6 +88,7 @@ class BookingController extends Controller
             ]
         ];
 
+
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'token'  => $token,
@@ -126,14 +128,7 @@ class BookingController extends Controller
             'payment_status'   => 'pending',
         ]);
 
-        $order = Order::create([
-            'booking_id' => $booking->id,
-            'order_number' => Str::uuid(),
-            'amount' => $booking->total_price,
-            'currency' => 'aud',
-            'status' => 'pending',
-        ]);
-
+        
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $session = \Stripe\Checkout\Session::create([
@@ -150,13 +145,20 @@ class BookingController extends Controller
                 'quantity' => 1,
             ]],
             'metadata' => [
-                'order_id' => $order->id,
                 'property_id' => $booking->property_id,
                 'booking_id' => $booking->id,
                 'user_id'    => $booking->user_id,
             ],
             'success_url' => url('/stripe-success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => url('/stripe-cancel'),
+        ]);
+
+        Payment::create([
+            'booking_id' => $booking->id,
+            'amount' => $booking->total_price,
+            'stripe_session_id' => $session->id,
+            'currency' => 'aud',
+            'status' => 'pending',
         ]);
 
         return response()->json([

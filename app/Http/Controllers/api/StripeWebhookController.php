@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,21 +30,30 @@ class StripeWebhookController extends Controller
 
             $session = $event->data->object;
 
-            $order = Order::find($session->metadata->order_id);
-
-            if ($order && $order->status !== 'paid') {
-
+            $payment = Payment::where('stripe_session_id', $session->id)->first();
+            
+            if(!$payment) {
                 Payment::create([
-                    'order_id' => $order->id,
-                    'stripe_payment_intent' => $session->payment_intent,
+                    'booking_id' => $session->metadata->booking_id,
                     'amount' => $session->amount_total / 100,
-                    'currency' => $session->currency,
-                    'status' => 'paid',
+                    'stripe_session_id' => $session->id,
+                    'currency' => 'aud',
+                    'status' => 'pending',
                 ]);
-
-                $order->update(['status' => 'paid']);
-                $order->booking->update(['status' => 'paid']);
             }
+
+            $payment->update([
+                'stripe_payment_intent' => $session->payment_intent,
+                'amount_cents'=> $session->amount_paid,
+                'status' => 'succeeded',
+            ]);
+
+            $booking = $payment->booking;
+            $booking->update([
+                'payment_status' => 'paid',
+            ]);
+
+            
         }
 
         return response()->json(['success' => true]);
