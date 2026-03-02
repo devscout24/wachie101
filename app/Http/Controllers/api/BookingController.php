@@ -4,24 +4,17 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Property;
-use App\Traits\apiresponse;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use App\Traits\apiresponse;
 
 class BookingController extends Controller
 {
     use apiresponse;
-
-
 
     public function store(Request $request)
     {

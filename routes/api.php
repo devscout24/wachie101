@@ -4,6 +4,7 @@ use App\Http\Controllers\api\AiChatController;
 use App\Http\Controllers\api\AmenityController;
 use App\Http\Controllers\api\BookingAddressController;
 use App\Http\Controllers\api\BookingController;
+use App\Http\Controllers\api\MailCollectionController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReviewsController;
 use App\Http\Controllers\api\StripeController;
@@ -106,3 +107,6 @@ return response()->json(['message' => 'API is working']);
 
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+
+Route::post('/subscriber-store', [MailCollectionController::class, 'store']);
