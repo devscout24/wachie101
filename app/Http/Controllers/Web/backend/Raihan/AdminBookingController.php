@@ -63,7 +63,7 @@ class AdminBookingController extends Controller
                         <a href="' . route('admin.property.show', $row->id) . '" class="btn btn-sm btn-info">Show</a>
                     ';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['payment_status','action'])
                 ->make(true);
         }
 

@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Property;
 use App\Models\Review;
 use App\Traits\apiresponse;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -59,10 +60,10 @@ class PropertyController extends Controller
             $rating = Review::where('property_id', $item->id)->avg('rating');
             return [
                 'id'         => $item->id,
-                'name'        => $item->name ?? null,
-                'address'     => $item->address ?? null,
-                'price'       => $firstRoom['minPrice'] ?? null,
-                'maxPeople'   => $firstRoom['maxPeople'] ?? null,
+                'name'        => $item->title ?? null,
+                'address'     => $item->location ?? null,
+                'price'       => $item->price ?? null,
+                'maxPeople'   => $item->max_guests ?? null,
                 'rating'     => $rating,
             ];
         });
@@ -72,7 +73,7 @@ class PropertyController extends Controller
         return response()->json([
             'status'  => true,
             'success' => true,
-            'data'    => $properties,
+            'data'    => $properties->items(),
             'pagination' => [
                 'current_page' => $currentPage,
                 'per_page'     => $perPage,
@@ -131,7 +132,7 @@ class PropertyController extends Controller
             'data'   => [
                 'id'            => $property->id,
                 'name'          => $property->title ?? null,
-                'address'       => $property->address ?? null,
+                'address'       => $property->location ?? null,
                 'latitude'      => isset($property->latitude) ? number_format((float)$property->latitude, 8, '.', '') : null,
                 'longitude'     => isset($property->longitude) ? number_format((float)$property->longitude, 8, '.', '') : null,
                 'booking_fee_percentage' => $property->booking_fee ?? null,
@@ -147,43 +148,61 @@ class PropertyController extends Controller
         
     }
 
-    public function availableDates(Request $request, $id){
-
+    public function availableDates(Request $request, $id)
+    {
         $property = Property::find($id);
         
-        if(!$property){
+        if (!$property) {
             return response()->json([
-                'success'=> false,
-                'message' => 'property not found',
+                'success' => false,
+                'message' => 'Property not found',
             ]);
         }
-
 
         $start_date = $request->query('start_date');
         $end_date = $request->query('end_date');
 
         try {
-            $checkIns = Booking::where('property_id', $property->id)
-            ->whereBetween('start_date', [$start_date, $end_date])
-            ->distinct()
-            ->pluck('start_date')->toArray();
+            // Get all bookings that overlap with the requested date range
+            $bookings = Booking::where('property_id', $property->id)
+                ->where(function ($query) use ($start_date, $end_date) {
+                    // Booking starts within the range
+                    $query->whereBetween('start_date', [$start_date, $end_date])
+                        // Booking ends within the range
+                        ->orWhereBetween('end_date', [$start_date, $end_date])
+                        // Booking completely encompasses the range
+                        ->orWhere(function ($q) use ($start_date, $end_date) {
+                            $q->where('start_date', '<=', $start_date)
+                            ->where('end_date', '>=', $end_date);
+                        });
+                })
+                ->get();
 
-            $checkOut = Booking::where('property_id', $property->id)
-            ->whereBetween('end_date', [$start_date, $end_date])
-            ->distinct()
-            ->pluck('end_date')->toArray();
+            $unavailableDates = [];
 
-            $unavailableDates = array_unique(array_merge($checkIns, $checkOut));
+            foreach ($bookings as $booking) {
+                // Generate ALL dates between start_date and end_date (inclusive)
+                $startDate = new DateTime($booking->start_date);
+                $endDate = new DateTime($booking->end_date);
+                
+                // Loop through each day in the booking period
+                while ($startDate <= $endDate) {
+                    $unavailableDates[] = $startDate->format('Y-m-d');
+                    $startDate->modify('+1 day');
+                }
+            }
+
+            // Remove duplicates and reindex array
+            $unavailableDates = array_values(array_unique($unavailableDates));
+
             return response()->json([
                 'success' => true,
                 'blocked_dates' => $unavailableDates
             ]);
 
-
-
         } catch (Exception $e) {
-            Log::error('Beds24 Request Exception', ['message' => $e->getMessage()]);
+            Log::error('Available Dates Exception', ['message' => $e->getMessage()]);
             throw $e;
         }
-    }    
+    } 
 }

@@ -7,7 +7,7 @@
 
     <div class="card">
         <div class="card-body">
-            <table id="propertyTable" class="table table-bordered nowrap" style="width:100%">
+            <table id="bookingTable" class="table table-bordered nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -29,7 +29,7 @@
 @push('scripts')
     <script>
         $(function() {
-            var table = $('#propertyTable').DataTable({
+            var table = $('#bookingTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.booking.index') }}",
@@ -65,42 +65,57 @@
                     }
                 ]
             });
-        });
 
-        $('#bookingTable').on('change', '.status-change', function() {
-            var $select = $(this);
-            var bookingId = $select.data('id');
-            var newStatus = $select.val();
+            $('#bookingTable').on('change', '.status-change', function() {
+                var $select = $(this);
+                var bookingId = $select.data('id');
+                var newStatus = $select.val();
 
-            $select.prop('disabled', true);
+                $select.prop('disabled', true);
 
-            $.ajax({
-                url: '{{ route("admin.booking.updateStatus") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: bookingId,
-                    payment_status: newStatus
-                },
-                success: function(response) {
-                    if (response.success) {
-                        
-                        // Re-enable the select
-                        $select.prop('disabled', false);
-                        
-                        $select.addClass('border-success');
-                        setTimeout(() => $select.removeClass('border-success'), 2000);
-                    } else {
-                        alert('Failed to update status.');
+                $.ajax({
+                    url: '{{ route("admin.booking.updateStatus") }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: bookingId,
+                        payment_status: newStatus
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Booking status updated successfully!',
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didClose: function() {
+                                    // Re-enable the select after alert closes
+                                    $select.prop('disabled', false);
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Failed!',
+                                text: 'Failed to update status.'
+                            });
+                            $select.prop('disabled', false);
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error updating status. Please try again.'
+                        });
                         $select.prop('disabled', false);
                     }
-                },
-                error: function(xhr) {
-                    alert('Error: ' + xhr.responseText);
-                    $select.prop('disabled', false);
-                }
+                });
             });
         });
+
+        
 
     </script>
 @endpush
