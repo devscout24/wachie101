@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\Backend\Shakhawat;
+namespace App\Http\Controllers\Web\backend\shakhawat;
 
 use Illuminate\Http\Request;
 
