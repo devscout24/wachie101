@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\ShowLogMiddleware;
+// use App\Http\Middleware\ShowLogMiddleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'log.request.show' => ShowLogMiddleware::class,
+            // 'log.request.show' => ShowLogMiddleware::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             'api/stripe/webhook',
