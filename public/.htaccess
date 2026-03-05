@@ -5,7 +5,9 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect trailing slashes
+    # Redirect trailing slashes (but not POST requests)
+    RewriteCond %{REQUEST_METHOD} GET [OR]
+    RewriteCond %{REQUEST_METHOD} HEAD
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
