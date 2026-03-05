@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\Backend\Raihan;
+namespace App\Http\Controllers\Web\backend\Raihan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;

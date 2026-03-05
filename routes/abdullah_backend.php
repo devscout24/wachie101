@@ -3,7 +3,7 @@
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\OpenAiChatController;
 use App\Http\Controllers\TeamController;
-use App\Http\Controllers\Web\Backend\Raihan\AdminBookingController;
+use App\Http\Controllers\Web\backend\Raihan\AdminBookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\backend\abdullah\PropertyController;
 
