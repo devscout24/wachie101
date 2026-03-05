@@ -56,6 +56,17 @@
 
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="#">
+                        <i class="side-menu__icon fa fa-book" style="color: #f11010;"></i>
+                        <span class="side-menu__label">Bookings</span>
+                        <i class="angle fa fa-angle-right"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li><a href="{{ route('admin.booking.index') }}" class="slide-item">Manage Bookings</a></li>
+                    </ul>
+                </li>
+
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="#">
                         <i class="side-menu__icon fa fa-users" style="color: #14B8A6;"></i>
                         <span class="side-menu__label">Team Members</span>
                         <i class="angle fa fa-angle-right"></i>

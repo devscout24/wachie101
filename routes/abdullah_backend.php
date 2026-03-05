@@ -3,6 +3,7 @@
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\OpenAiChatController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\Web\Backend\Raihan\AdminBookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\backend\abdullah\PropertyController;
 
@@ -21,6 +22,12 @@ Route::prefix('admin/properties')->name('admin.property.')->group(function () {
     Route::get('/show/{id}', [PropertyController::class, 'show'])->name('show');
 });
 // =======================================================
+
+Route::prefix('admin/bookings')->name('admin.booking.')->group(function () {
+    Route::get('/index', [AdminBookingController::class, 'index'])->name('index');
+    Route::get('/show/{id}', [AdminBookingController::class, 'show'])->name('show');
+    Route::post('/update-status', [AdminBookingController::class, 'updateStatus'])->name('updateStatus');
+});
 
 
 // ================= Amenity Management =================

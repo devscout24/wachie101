@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Backend\Raihan;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminBookingController extends Controller
@@ -12,43 +13,83 @@ class AdminBookingController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Booking::with(['property'])->select('bookings.*');
+            $query = Booking::with(['property', 'user'])->select('bookings.*');
 
             return DataTables::eloquent($query)
                 ->addIndexColumn()
-                ->addColumn('multiple_image', function ($row) {
-                    if ($row->property->images->count() > 0) {
-                        $img = asset($row->property->images->first()->image);
-                        return '<img src="' . $img . '" style="width:80px;height:40px;object-fit:cover;">';
-                    }
-                    return 'No Image';
+                ->addColumn('user_name', function ($row) {
+                    return $row->user ? $row->user->name : '-';
                 })
-                ->addColumn('amenity_id', function ($row) {
-                    return $row->amenities->pluck('name')->implode(', ');
+                ->addColumn('start_date', function ($row) {
+                    return $row->start_date;
                 })
-                ->addColumn('price', function ($row) {
-                    return '$' . number_format($row->price, 2);
+                ->addColumn('end_date', function ($row) {
+                    return $row->end_date;
                 })
-                ->addColumn('cleaning_fee', function ($row) {
-                    return '$' . number_format($row->cleaning_fee, 2);
+                ->addColumn('adults', function ($row) {
+                    return $row->adults;
+                })
+                ->addColumn('children', function ($row) {
+                    return $row->children;
+                })
+                ->addColumn('total_price', function ($row) {
+                    return $row->total_price;
                 })
                 ->addColumn('description', function ($row) {
                     return Str::limit(strip_tags($row->description), 30);
                 })
-                ->addColumn('status', function ($row) {
-                    return $row->status ? 'Active' : 'Inactive';
+                ->addColumn('payment_status', function ($row) {
+                    return $row->payment_status;
+                })
+                ->addColumn('payment_status', function ($row) {
+                    $statuses = ['request', 'confirmed', 'paid', 'completed', 'refunded', 'cancelled'];
+                    
+                    $options = '';
+                    foreach ($statuses as $status) {
+                        $selected = ($row->payment_status === $status) ? 'selected' : '';
+                        // Capitalize first letter for display
+                        $label = ucfirst($status); 
+                        $options .= "<option value='{$status}' {$selected}>{$label}</option>";
+                    }
+
+                    return '
+                        <select class="form-control form-control-sm status-change" data-id="' . $row->id . '">
+                            ' . $options . '
+                        </select>
+                    ';
                 })
                 ->addColumn('action', function ($row) {
                     return '
-                        <a href="' . route('admin.property.edit', $row->id) . '" class="btn btn-sm btn-primary">Edit</a>
                         <a href="' . route('admin.property.show', $row->id) . '" class="btn btn-sm btn-info">Show</a>
-                        <button data-id="' . $row->id . '" class="btn btn-sm btn-danger btn-delete">Delete</button>
                     ';
                 })
-                ->rawColumns(['multiple_image', 'action'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view('admin.property.index');
+        return view('admin.booking.index');
+    }
+
+    public function show($id)
+    {
+        $booking = Booking::with(['property', 'user'])->findOrFail($id);
+        return view('admin.booking.show', compact('booking'));
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:bookings,id',
+            'payment_status' => 'required|in:request,confirmed,paid,completed,refunded,cancelled'
+        ]);
+
+        $booking = Booking::find($request->id);
+        $booking->payment_status = $request->payment_status;
+        
+        if ($booking->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 500);
     }
 }

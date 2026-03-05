@@ -11,6 +11,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>User</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Adults</th>
@@ -31,7 +32,7 @@
             var table = $('#propertyTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.property.index') }}",
+                ajax: "{{ route('admin.booking.index') }}",
                 scrollX: true,
                 columns: [{
                         data: 'DT_RowIndex',
@@ -39,8 +40,13 @@
                         orderable: false
                     },
                     {
+                        data: 'user_name',
+                        name: 'user.name'
+                    }, 
+                    {
                         data: 'start_date'
-                    }, {
+                    }, 
+                    {
                         data: 'end_date'
                     }, {
                         data: 'adults'
@@ -59,29 +65,42 @@
                     }
                 ]
             });
-
-            $(document).on('click', '.btn-delete', function() {
-                if (!confirm('Delete this property?')) return;
-
-                let id = $(this).data('id');
-
-                $.ajax({
-                    url: "{{ url('admin/properties/delete') }}/" +
-                        id, // match your route: /delete/{id}
-                    type: 'DELETE',
-                    data: {
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(res) {
-                        $('#propertyTable').DataTable().ajax.reload();
-                        alert(res.message || 'Deleted');
-                    },
-                    error: function(xhr) {
-                        alert(xhr.responseJSON.message || 'Something went wrong');
-                    }
-                });
-            });
-
         });
+
+        $('#bookingTable').on('change', '.status-change', function() {
+            var $select = $(this);
+            var bookingId = $select.data('id');
+            var newStatus = $select.val();
+
+            $select.prop('disabled', true);
+
+            $.ajax({
+                url: '{{ route("admin.booking.updateStatus") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: bookingId,
+                    payment_status: newStatus
+                },
+                success: function(response) {
+                    if (response.success) {
+                        
+                        // Re-enable the select
+                        $select.prop('disabled', false);
+                        
+                        $select.addClass('border-success');
+                        setTimeout(() => $select.removeClass('border-success'), 2000);
+                    } else {
+                        alert('Failed to update status.');
+                        $select.prop('disabled', false);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                    $select.prop('disabled', false);
+                }
+            });
+        });
+
     </script>
 @endpush

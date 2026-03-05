@@ -138,9 +138,9 @@ class PropertyController extends Controller
                 'price'         => $property->price ?? null,
                 'maxPeople'         => $property->max_guests ?? null,
                 'cleaning_fee'    => $property->cleaning_fee ?? 0,
-                'amenities'     => $property->amenities ?? null,
+                'amenities'     => $property->amenities->pluck('name')->all(),
                 'property_info'         => $property->description ?? null,  // Property description 1
-                'local_area'         =>  null,  // Property description 2
+                'local_area'         => $property->local_area ?? null,  // Property description 2
             ],
         ]);
 
