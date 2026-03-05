@@ -54,7 +54,7 @@ class PropertyController extends Controller
         //     'includeUnitDetails'  => true,
         // ])->get('https://beds24.com/api/v2/properties');
 
-        $paginator = Property::orderBy('created_at','desc')->paginate($perPage);
+        $paginator = Property::with(['images'])->orderBy('created_at','desc')->paginate($perPage);
 
         $properties =  $paginator->through(function ($item) {
             $rating = Review::where('property_id', $item->id)->avg('rating');
@@ -64,6 +64,7 @@ class PropertyController extends Controller
                 'address'     => $item->location ?? null,
                 'price'       => $item->price ?? null,
                 'maxPeople'   => $item->max_guests ?? null,
+                'cover_image' => $item->images()?->first()?->image ?? null,
                 'rating'     => $rating,
             ];
         });
@@ -122,7 +123,7 @@ class PropertyController extends Controller
         // ])->get('https://beds24.com/api/v2/properties');
 
             // Convert response to collection and map it
-        $property = Property::where('id', $property->id)->first();
+        $property = Property::with('images')->where('id', $property->id)->first();
         
 
         
@@ -142,6 +143,7 @@ class PropertyController extends Controller
                 'amenities'     => $property->amenities->pluck('name')->all(),
                 'property_info'         => $property->description ?? null,  // Property description 1
                 'local_area'         => $property->local_area ?? null,  // Property description 2
+                'images'        => $property->images->pluck('image')->all(),
             ],
         ]);
 
