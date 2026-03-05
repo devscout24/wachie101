@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('booking_ref_id')->nullable();
+            // $table->unsignedBigInteger('booking_ref_id')->nullable();
 
             // Relations
             $table->foreignId('property_id')->constrained()->cascadeOnDelete();
@@ -34,12 +34,13 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2)->nullable();
 
             //  PAYMENT
-            $table->enum('payment_status', ['request', 'confirmed', 'paid', 'completed', 'refunded', 'cancelled'])->default('request'); // request, paid, cancelled
+            $table->enum('payment_status', ['request', 'confirmed', 'paid', 'completed', 
+                'refunded', 'cancelled'])->default('request'); // request, paid, cancelled
             $table->string('stripe_session_id')->nullable();
 
             $table->timestamps();
 
-            $table->index('booking_ref_id');
+            // $table->index('booking_ref_id');
         });
     }
 

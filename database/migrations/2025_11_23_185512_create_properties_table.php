@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
 
-            $table->unsignedBigInteger('property_ref_id')->nullable();
-            $table->unsignedBigInteger('room_ref_id')->nullable();
+            // $table->unsignedBigInteger('property_ref_id')->nullable();
+            // $table->unsignedBigInteger('room_ref_id')->nullable();
 
             $table->json('multiple_image')->nullable();
             $table->string('title');
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->boolean('status')->default(1)->comment('1=Active,0=Inactive');
             $table->timestamps();
 
-            $table->index('property_ref_id');
+            // $table->index('property_ref_id');
         });
 
 

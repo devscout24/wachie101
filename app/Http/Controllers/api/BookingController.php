@@ -52,17 +52,17 @@ class BookingController extends Controller
             ], 422);
         }
 
-        $token = config('services.beds24.token');
+        // $token = config('services.beds24.token');
 
-        if (!$token) {
-            return response()->json([
-                'error' => 'Beds24 token not found'
-            ]);
-        }
+        // if (!$token) {
+        //     return response()->json([
+        //         'error' => 'Beds24 token not found'
+        //     ]);
+        // }
         
         $bookingData = [
             [
-                "roomId" => $property->room_ref_id,
+                // "roomId" => $property->room_ref_id,
                 "status" => "request",  //confirmed
                 // "status" => "confirmed", 
                 "arrival" => $request->start_date,
@@ -83,14 +83,14 @@ class BookingController extends Controller
         ];
 
 
-        $response = Http::withHeaders([
-            'accept' => 'application/json',
-            'token'  => $token,
-            'Content-Type' => 'application/json',
-        ])->post('https://beds24.com/api/v2/bookings', $bookingData);
+        // $response = Http::withHeaders([
+        //     'accept' => 'application/json',
+        //     'token'  => $token,
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://beds24.com/api/v2/bookings', $bookingData);
 
-        $data = $response->json();
-        $firstItem = $data[0];
+        // $data = $response->json();
+        // $firstItem = $data[0];
 
         // 💰 Price calculations
         $pricePerNight = $property->price;
@@ -104,7 +104,7 @@ class BookingController extends Controller
         // ✅ STORE FULL BOOKING + PRICES
         $booking = Booking::create([
             'property_id'      => $property->id,
-            'booking_ref_id' => $firstItem['new']['id'],
+            // 'booking_ref_id' => $firstItem['new']['id'] ?? null,
             'user_id'          => auth()->id(),
             'start_date'       => $request->start_date,
             'end_date'         => $request->end_date,
