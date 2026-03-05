@@ -78,13 +78,13 @@ class PropertyController extends Controller
             'multiple_image.*' => 'file|mimes:jpg,jpeg,png,gif,webp,svg,avif|max:5120',
         ]);
 
-        $token = config('services.beds24.token');
+        // $token = config('services.beds24.token');
 
-        if (!$token) {
-            return response()->json([
-                'error' => 'Beds24 token not found'
-            ]);
-        }
+        // if (!$token) {
+        //     return response()->json([
+        //         'error' => 'Beds24 token not found'
+        //     ]);
+        // }
 
         $data = $request->except(['multiple_image', 'amenity_id']);
         $data['user_id'] = Auth::id() ?? 1;

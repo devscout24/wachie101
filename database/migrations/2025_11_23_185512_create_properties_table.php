@@ -37,7 +37,10 @@ return new class extends Migration
             $table->integer('max_guests')->default(0);
             $table->integer('max_children')->default(0);
             $table->foreignId('amenity_id')->nullable();
+
             $table->text('description')->nullable();
+            $table->text('local_area')->nullable();
+
             $table->string('image')->default('default.png');
             $table->boolean('status')->default(1)->comment('1=Active,0=Inactive');
             $table->timestamps();

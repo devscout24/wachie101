@@ -37,16 +37,7 @@
                     <input type="text" name="title" class="form-control" value="{{ $property->title }}" required>
                 </div>
 
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">propertyId</label>
-                    <input type="text" name="property_ref_id" class="form-control" value="{{ $property->property_ref_id }}" required>
-                </div>
                 
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">roomId</label>
-                    <input type="text" name="room_ref_id" class="form-control" value="{{ $property->room_ref_id }}" required>
-                </div>
-
                 {{-- Location --}}
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Location</label>
@@ -91,9 +82,14 @@
                 </div>
 
                 {{-- Description --}}
-                <div class="col-md-12 mb-3">
+                <div class="col-md-6 mb-3">
                     <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" rows="5">{{ $property->description }}</textarea>
+                    <textarea name="description" class="form-control summernote" rows="5">{{ $property->description }}</textarea>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Local Area</label>
+                    <textarea name="local_area" class="form-control summernote" rows="5">{{ $property->local_area }}</textarea>
                 </div>
 
             </div>
@@ -103,3 +99,13 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('.summernote').summernote({height:200});
+    $('select[multiple]').select2({placeholder:"Select amenities",width:'100%'});
+});
+</script>
+@endpush
