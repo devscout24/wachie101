@@ -25,7 +25,8 @@ Route::middleware(['web'])->group(function () {
 
     // kept original admin-specific route in case some code uses it
     // Route::post('admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
-    Route::post('admin/login', [AuthController::class, 'login'])->name('admin.login');
+
+    Route::post('admin/login', [AuthController::class, 'login'])->name('admin.login')->middleware('log.request.show');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
