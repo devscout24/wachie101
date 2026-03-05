@@ -78,62 +78,14 @@ class PropertyController extends Controller
             'multiple_image.*' => 'file|mimes:jpg,jpeg,png,gif,webp,svg,avif|max:5120',
         ]);
 
-        // $token = config('services.beds24.token');
-
-        // if (!$token) {
-        //     return response()->json([
-        //         'error' => 'Beds24 token not found'
-        //     ]);
-        // }
+        
 
         $data = $request->except(['multiple_image', 'amenity_id']);
         $data['user_id'] = Auth::id() ?? 1;
 
         $property = Property::create($data);
 
-        // $response = Http::withHeaders([
-        //     'accept' => 'application/json',
-        //     'token' => $token,
-        //     'Content-Type' => 'application/json',
-        // ])->post('https://beds24.com/api/v2/properties', [
-        //     [
-        //         "name" => $request->title,
-        //         "propertyType" => "apartment",
-        //         "currency" => "AUD",
-        //         "address" => $request->location,
-        //         "city" => $request->city,
-        //         "state" => $request->state,
-        //         "country" => "Australia",
-        //         "postcode" => $request->postcode,
-        //         "mobile" => $request->mobile,
-        //     ]
-        // ]);
-
-        // $dataArray = $response->json()[0];
-        // $property->property_ref_id = $dataArray["new"]["id"];
-        // $property->save();
-
-        // $response = Http::withHeaders([
-        //     'accept' => 'application/json',
-        //     'token' => $token,
-        //     'Content-Type' => 'application/json',
-        // ])->post('https://beds24.com/api/v2/properties', [
-        //     [
-        //         "id" => $property->property_ref_id,
-        //         "roomTypes" => [
-        //             [
-        //                 "name" => "Standard room",
-        //                 "qty" => $request->max_guests,
-        //                 "maxAdult" => $request->max_guests - $request->max_children,
-        //                 "maxChildren" => $request->max_children
-        //             ]
-        //         ]
-        //     ]
-        // ]);
-
-        // $dataArray = $response->json()[0];
-        // $property->room_ref_id = $dataArray["new"]['roomTypes']["id"];
-        // $property->save();
+        
 
         // Save multiple images
         if ($request->hasFile('multiple_image')) {
@@ -253,22 +205,5 @@ class PropertyController extends Controller
         return response()->json(['message' => 'Property deleted successfully']);
     }
 
-
-
-    //     public function toggleStatus($id)
-    // {
-    //     $news = News::find($id);
-    //     if (!$news) {
-    //         return response()->json(['success' => false]);
-    //     }
-
-    //     $news->status = $news->status == 1 ? 0 : 1;
-    //     $news->save();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'status'  => $news->status
-    //     ]);
-    // }
     
 }

@@ -25,34 +25,9 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
 
-        // $token = config('services.beds24.token');
-
-        // if (!$token) {
-        //     return response()->json([
-        //         'error' => 'Beds24 token not found'
-        //     ]);
-        // }
-
 
         $perPage = 10;
         $currentPage = $request->get('page', 1);
-
-        // $allRefIds = Property::pluck('property_ref_id')->toArray();
-        // $pagedRefIds = array_slice($allRefIds, ($currentPage - 1) * $perPage, $perPage);
-        // $response = Http::withHeaders([
-        //     'accept' => 'application/json',
-        //     'token'  => $token,
-        // ])->withQueryParameters([
-        //     'id'                  => $pagedRefIds,
-        //     'includeLanguages'    => 'all',
-        //     'includeTexts'        => 'all',
-        //     'includePictures'     => true,
-        //     'includeOffers'       => true,
-        //     'includePriceRules'   => true,
-        //     'includeUpsellItems'  => true,
-        //     'includeAllRooms'     => true,
-        //     'includeUnitDetails'  => true,
-        // ])->get('https://beds24.com/api/v2/properties');
 
         $paginator = Property::with(['images'])->orderBy('created_at','desc')->paginate($perPage);
 
@@ -88,13 +63,7 @@ class PropertyController extends Controller
 
     public function getone($id)
     {
-        // $token = config('services.beds24.token');
-
-        // if (!$token) {
-        //     return response()->json([
-        //         'error' => 'Beds24 token not found'
-        //     ]);
-        // }
+        
         
         $property = Property::find($id);
 
@@ -105,22 +74,6 @@ class PropertyController extends Controller
             ]);
         }
 
-        // $response = Http::withHeaders([
-        //     'accept' => 'application/json',
-        //     'token'  => $token,
-        // ])->withQueryParameters([
-        //     'id'                  => $property->property_ref_id,
-        //     'includeLanguages'    => 'all',
-        //     'includeTexts'        => 'all',
-        //     'includePictures'     => true,
-        //     'includeOffers'       => true,
-        //     'includePriceRules'   => true,
-        //     'includeUpsellItems'  => true,
-        //     'includeAllRooms'     => true,
-        //     'includeUnitDetails'  => true,
-        //     'roomId'              => $property->room_ref_id,
-
-        // ])->get('https://beds24.com/api/v2/properties');
 
             // Convert response to collection and map it
         $property = Property::with('images')->where('id', $property->id)->first();

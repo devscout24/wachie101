@@ -343,18 +343,7 @@ class UserAuthController extends Controller
                 return $this->error([], $validator->errors(), 422);
             }
 
-        //   // Avatar upload
-        //     if ($request->hasFile('avatar')) {
-        //         $file = $request->file('avatar');
-        //         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        //         $file->move(public_path('uploads/avatar'), $filename);
-
-        //         if ($user->avatar && file_exists(public_path('uploads/avatar/' . $user->avatar))) {
-        //             @unlink(public_path('uploads/avatar/' . $user->avatar));
-        //         }
-
-        //         $user->avatar = $filename;
-        //     }
+        
 
                 // Avatar upload
         if ($request->hasFile('avatar')) {

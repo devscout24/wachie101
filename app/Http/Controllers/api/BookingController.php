@@ -52,13 +52,7 @@ class BookingController extends Controller
             ], 422);
         }
 
-        // $token = config('services.beds24.token');
-
-        // if (!$token) {
-        //     return response()->json([
-        //         'error' => 'Beds24 token not found'
-        //     ]);
-        // }
+        
         
         $bookingData = [
             [
@@ -83,14 +77,6 @@ class BookingController extends Controller
         ];
 
 
-        // $response = Http::withHeaders([
-        //     'accept' => 'application/json',
-        //     'token'  => $token,
-        //     'Content-Type' => 'application/json',
-        // ])->post('https://beds24.com/api/v2/bookings', $bookingData);
-
-        // $data = $response->json();
-        // $firstItem = $data[0];
 
         // 💰 Price calculations
         $pricePerNight = $property->price;
