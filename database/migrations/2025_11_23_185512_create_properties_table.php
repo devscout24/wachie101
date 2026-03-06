@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreignId('rating')->nullable();
             $table->foreignId('total_reviews')->default(0)->nullable();
             $table->float('price')->default(0);
+            $table->float('refundable_deposit')->default(0);
             $table->float('cleaning_fee')->default(0);
             $table->float('booking_fee')->default(0);
 

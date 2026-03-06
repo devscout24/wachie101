@@ -86,6 +86,11 @@
                     <input type="number" name="max_children" class="form-control" value="{{ old('max_children',0) }}">
                 </div>
 
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Refundable Damage Deposit</label>
+                    <input type="number" name="refundable_deposit" class="form-control" value="{{ old('refundable_deposit',0) }}">
+                </div>
+
                 <div class="col-md-12 mb-3">
                     <label class="form-label">Amenities</label>
                     <select name="amenity_id[]" class="form-select" multiple>
