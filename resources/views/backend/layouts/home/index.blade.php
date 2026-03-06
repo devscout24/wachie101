@@ -26,12 +26,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">1,12,324</h3>
+                                                    <h3 class="mb-2 fw-semibold">0</h3>
                                                     <p class="text-muted fs-13 mb-0">Daily Visitors</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            42%</span>
+                                                            0%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -49,12 +49,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">12,563</h3>
+                                                    <h3 class="mb-2 fw-semibold">0</h3>
                                                     <p class="text-muted fs-13 mb-0">Total Orders</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-danger fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-down'></i>
-                                                            12%</span>
+                                                            0%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -72,12 +72,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">$5,178</h3>
+                                                    <h3 class="mb-2 fw-semibold">$0</h3>
                                                     <p class="text-muted fs-13 mb-0">Conversion Rate</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            27%</span>
+                                                            0%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -95,12 +95,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">$43,987</h3>
+                                                    <h3 class="mb-2 fw-semibold">$0</h3>
                                                     <p class="text-muted fs-13 mb-0">Avg Orders</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            9%</span>
+                                                            0%</span>
                                                         since last month
                                                     </p>
                                                 </div>
