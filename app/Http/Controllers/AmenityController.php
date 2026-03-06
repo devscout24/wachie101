@@ -74,6 +74,7 @@ class AmenityController extends Controller
         $amenity = new Amenity();
         
         $amenity->name = $request->name;
+        $amenity->ref_name = $request->ref_name;
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . Str::slug($request->name) . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads/amenities'), $imageName);
@@ -104,6 +105,7 @@ class AmenityController extends Controller
 
         $amenity = Amenity::findOrFail($id);
         $amenity->name = $request->name;
+        $amenity->ref_name = $request->ref_name;
 
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . Str::slug($request->name) . '.' . $request->image->getClientOriginalExtension();

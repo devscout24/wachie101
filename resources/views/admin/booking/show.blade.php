@@ -3,7 +3,7 @@
 @section('body')
 <div class="d-flex justify-content-between mt-4 mb-3">
     <h4>Property Details</h4>
-    <a href="{{ route('admin.property.index') }}" class="btn btn-secondary">Back</a>
+    <a href="{{ route('admin.booking.index') }}" class="btn btn-secondary">Back</a>
 </div>
 
 <div class="card">
