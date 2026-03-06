@@ -67,10 +67,15 @@
                     <label class="form-label">Max Guests</label>
                     <input type="number" name="max_guests" class="form-control" value="{{ $property->max_guests }}" required>
                 </div>
-                
+
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Max Children</label>
+                    <input type="number" name="max_children" class="form-control" value="{{ old('max_children', $property->max_children) }}">
+                </div>
+
                 <div class="col-md-2 mb-3">
                     <label class="form-label">Refundable Damage Deposit</label>
-                    <input type="number" name="refundable_deposit" class="form-control" value="{{ old('refundable_deposit',0) }}">
+                    <input type="number" name="refundable_deposit" class="form-control" value="{{ old('refundable_deposit', $property->refundable_deposit) }}">
                 </div>
                 
                 {{-- ✅ Amenities --}}
