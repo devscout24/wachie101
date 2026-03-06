@@ -83,7 +83,7 @@ class BookingController extends Controller
         $priceTotal    = $pricePerNight * $nights;
         $cleaningFee   = $property->cleaning_fee;
         // $bookingFee    = round($priceTotal * ($property->booking_fee/100 ?? 0.045), 2);
-        $bookingFee    = 0.045;
+        $bookingFee    = round($priceTotal * 0.045, 2);
         $total         = $priceTotal + $cleaningFee + $bookingFee;
 
         
@@ -230,7 +230,7 @@ class BookingController extends Controller
         $priceTotal    = $pricePerNight * $nights;
         $cleaningFee   = $property->cleaning_fee;
         // $bookingFee    = round($priceTotal * ($property->booking_fee/100 ?? 0.045), 2);
-        $bookingFee    = 0.045;
+        $bookingFee    = round($priceTotal * 0.045, 2);
         $total         = $priceTotal + $cleaningFee + $bookingFee;
 
         return response()->json([
