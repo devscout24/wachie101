@@ -15,7 +15,7 @@ class BackendController extends Controller
         $usersCount = User::count();
         $usersLastMonth = User::where('created_at', '>=', now()->subMonth())->count();
         if($usersCount > 0){
-            $usersLastMonth = ($usersLastMonth / $usersCount) * 100;
+            $usersLastMonth = round(($usersLastMonth / $usersCount) * 100, 0);
         }else{
             $usersLastMonth = 0;
         }
@@ -26,14 +26,14 @@ class BackendController extends Controller
 
         $convertion = Booking::whereIn('payment_status', ['confirmed', 'paid', 'completed'])->count();
         if($totalOrders > 0){
-            $convertion = ($convertion / $totalOrders) * 100;
+            $convertion = round(($convertion / $totalOrders) * 100, 2);
         }else{
             $convertion = 0;
         }
 
         $convertionLastMonth = Booking::whereIn('payment_status', ['confirmed', 'paid', 'completed'])->count();
         if($totalOrders > 0){
-            $convertionLastMonth = ($convertionLastMonth / $totalOrders) * 100;
+            $convertionLastMonth = round(($convertionLastMonth / $totalOrders) * 100, 2);
         }else{
             $convertionLastMonth = 0;
         }
@@ -42,7 +42,7 @@ class BackendController extends Controller
         $paymentLastMonth = Payment::where('status', 'succeeded')->where('created_at', '>=', now()->subMonth())->sum('amount');
 
         if($totalPayment > 0){
-            $paymentLastMonth = ($paymentLastMonth / $totalPayment) * 100;
+            $paymentLastMonth = round(($paymentLastMonth / $totalPayment) * 100, 2);
         }else{
             $paymentLastMonth = 0;
         }
