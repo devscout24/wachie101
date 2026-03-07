@@ -26,12 +26,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">0</h3>
-                                                    <p class="text-muted fs-13 mb-0">Daily Visitors</p>
+                                                    <h3 class="mb-2 fw-semibold">{{ $usersCount }}</h3>
+                                                    <p class="text-muted fs-13 mb-0">Visitors</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            0%</span>
+                                                            {{ $usersLastMonth }}%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -49,12 +49,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">0</h3>
-                                                    <p class="text-muted fs-13 mb-0">Total Orders</p>
+                                                    <h3 class="mb-2 fw-semibold">{{ $totalPayment }}</h3>
+                                                    <p class="text-muted fs-13 mb-0">Total Earning</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-danger fw-semibold fs-13 me-1">
-                                                            <i class='fa fa-long-arrow-down'></i>
-                                                            0%</span>
+                                                            <i class='fa fa-long-arrow-up'></i>
+                                                            {{ $paymentLastMonth }}%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -72,12 +72,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">$0</h3>
+                                                    <h3 class="mb-2 fw-semibold">{{ $convertion }}%</h3>
                                                     <p class="text-muted fs-13 mb-0">Conversion Rate</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            0%</span>
+                                                            {{ $convertionLastMonth }}%</span>
                                                         since last month
                                                     </p>
                                                 </div>
@@ -95,12 +95,12 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col">
-                                                    <h3 class="mb-2 fw-semibold">$0</h3>
-                                                    <p class="text-muted fs-13 mb-0">Avg Orders</p>
+                                                    <h3 class="mb-2 fw-semibold">{{ $totalOrders }}</h3>
+                                                    <p class="text-muted fs-13 mb-0">Total Orders</p>
                                                     <p class="text-muted mb-0 mt-2 fs-12">
                                                         <span class="icn-box text-success fw-semibold fs-13 me-1">
                                                             <i class='fa fa-long-arrow-up'></i>
-                                                            0%</span>
+                                                            {{ $convertionLastMonth }}%</span>
                                                         since last month
                                                     </p>
                                                 </div>
